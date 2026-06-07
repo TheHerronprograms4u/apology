@@ -3,28 +3,64 @@
 import React, { useState } from 'react';
 import { Editor } from '@/components/Editor';
 import { Polaroid } from '@/components/ui/Polaroid';
-import { WashiTape } from '@/components/ui/WashiTape';
-import { ImagePlus, Save, Trash2, Calendar, Smile } from 'lucide-react';
+import { createClient } from '@/lib/supabase-client';
+import { ImagePlus, Save, Calendar, Smile } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import styles from './JournalEntry.module.css';
 
 const MOODS = [
-  { label: 'Happy', emoji: '😊', color: '#FFF4BD' },
-  { label: 'Calm', emoji: '😌', color: '#DCEEFF' },
-  { label: 'Reflective', emoji: '🤔', color: '#BFCBFF' },
-  { label: 'Sad', emoji: '😢', color: '#C7E6FF' },
-  { label: 'Excited', emoji: '✨', color: '#A8D8FF' },
+  { label: 'Happy', emoji: '😊' },
+  { label: 'Calm', emoji: '😌' },
+  { label: 'Reflective', emoji: '🤔' },
+  { label: 'Sad', emoji: '😢' },
+  { label: 'Excited', emoji: '✨' },
 ];
 
 export default function NewJournalEntry() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState<any>(null);
   const [mood, setMood] = useState('Calm');
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const supabase = createClient();
+  const router = useRouter();
 
-  const handleSave = async () => {
-    // Logic to save to Supabase
-    console.log({ title, content, mood, photos });
-    alert('Entry saved! (Sync with Supabase pending setup)');
+  const handleSave = async (isDraft = false) => {
+    if (!title) {
+      alert('Please give your entry a title!');
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        alert('You must be logged in to save entries.');
+        router.push('/login');
+        return;
+      }
+
+      const { error } = await supabase.from('entries').insert({
+        title,
+        content,
+        mood,
+        is_draft: isDraft,
+        user_id: user.id,
+        journal_date: new Date().toISOString().split('T')[0]
+      });
+
+      if (error) throw error;
+
+      alert(isDraft ? 'Draft saved!' : 'Entry published!');
+      if (!isDraft) router.push('/journal');
+      
+    } catch (error: any) {
+      console.error('Error saving entry:', error);
+      alert('Failed to save: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -32,9 +68,19 @@ export default function NewJournalEntry() {
       <header className={styles.header}>
         <h1 className="handwritten">New Entry</h1>
         <div className={styles.actions}>
-          <button className={styles.btnSecondary}>Save Draft</button>
-          <button onClick={handleSave} className={styles.btnPrimary}>
-            <Save size={18} /> Publish
+          <button 
+            onClick={() => handleSave(true)} 
+            disabled={loading}
+            className={styles.btnSecondary}
+          >
+            Save Draft
+          </button>
+          <button 
+            onClick={() => handleSave(false)} 
+            disabled={loading}
+            className={styles.btnPrimary}
+          >
+            <Save size={18} /> {loading ? 'Saving...' : 'Publish'}
           </button>
         </div>
       </header>
@@ -80,21 +126,14 @@ export default function NewJournalEntry() {
             <h3 className="handwritten">Photo Gallery</h3>
             <div className={styles.dropZone}>
               <ImagePlus size={32} />
-              <p>Drag photos here</p>
+              <p>Coming Soon: Photo Uploads</p>
             </div>
             
             <div className={styles.photoGrid}>
-              {photos.length === 0 && (
-                <Polaroid rotation={-2} className={styles.placeholderPolaroid}>
-                  <div className={styles.emptyPhoto}>No photos yet</div>
-                </Polaroid>
-              )}
+              <Polaroid rotation={-2} className={styles.placeholderPolaroid}>
+                <div className={styles.emptyPhoto}>No photos yet</div>
+              </Polaroid>
             </div>
-          </div>
-
-          <div className={styles.tagsArea}>
-            <h3 className="handwritten">Tags & Collections</h3>
-            <input type="text" placeholder="Add a tag..." className={styles.tagInput} />
           </div>
         </aside>
       </div>
