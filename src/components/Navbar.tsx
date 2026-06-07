@@ -1,17 +1,43 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Book, Image, Calendar, User, Home } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Book, Image, Calendar, User, Home, LogOut } from 'lucide-react';
+import { createClient } from '@/lib/supabase-client';
 import { clsx } from 'clsx';
+import { useEffect, useState } from 'react';
 import styles from './Navbar.module.css';
 
 export const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const supabase = createClient();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
+    router.refresh();
+  };
 
   const navItems = [
     { href: '/', icon: Home, label: 'Home' },
     { href: '/journal/new', icon: Book, label: 'Write' },
+    { href: '/journal', icon: Book, label: 'Journal' },
     { href: '/gallery', icon: Image, label: 'Memories' },
     { href: '/timeline', icon: Calendar, label: 'Timeline' },
   ];
@@ -37,9 +63,15 @@ export const Navbar = () => {
         </div>
 
         <div className={styles.auth}>
-          <Link href="/login" className={styles.loginBtn}>
-            <User size={20} />
-          </Link>
+          {user ? (
+            <button onClick={handleSignOut} className={styles.loginBtn} title="Sign Out">
+              <LogOut size={20} />
+            </button>
+          ) : (
+            <Link href="/login" className={styles.loginBtn} title="Sign In">
+              <User size={20} />
+            </Link>
+          )}
         </div>
       </div>
     </nav>
