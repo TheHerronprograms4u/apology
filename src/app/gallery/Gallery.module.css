@@ -19,12 +19,24 @@
   padding: 1rem;
 }
 
-.galleryItem {
+.galleryItemLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
   break-inside: avoid;
   margin-bottom: 3rem;
+}
+
+.galleryItem {
   position: relative;
   display: flex;
   justify-content: center;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .polaroid {
