@@ -50,6 +50,202 @@ h1, h2, h3, .handwritten {
   color: var(--soft-navy);
 }
 
+/* Scrapbook UI Utilities */
+.sb-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.sb-header h1 {
+  font-size: 3rem;
+}
+
+.sb-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.sb-btn-primary {
+  background: var(--soft-navy);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.sb-btn-secondary {
+  background: white;
+  color: var(--soft-navy);
+  border: 1px solid var(--baby-blue);
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.sb-btn-danger {
+  background: #fff0f0;
+  color: #ff6b6b;
+  border: 1px solid #ffcaca;
+  padding: 0.6rem 1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.sb-btn-danger:hover {
+  background: #ff6b6b;
+  color: white;
+}
+
+.sb-back-btn {
+  color: var(--soft-navy);
+  background: var(--powder-blue);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+
+.sb-back-btn:hover {
+  transform: scale(1.1);
+}
+
+.sb-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 3rem;
+}
+
+@media (max-width: 900px) {
+  .sb-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sb-title-input {
+  width: 100%;
+  font-family: 'Indie Flower', cursive;
+  font-size: 2rem;
+  border: none;
+  background: transparent;
+  border-bottom: 2px dashed var(--baby-blue);
+  margin-bottom: 1.5rem;
+  outline: none;
+  color: var(--soft-navy);
+}
+
+.sb-meta-row {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  color: var(--text-muted);
+}
+
+.sb-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sb-mood-select {
+  border: none;
+  background: var(--powder-blue);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  color: var(--soft-navy);
+  cursor: pointer;
+}
+
+.sb-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.sb-dropzone {
+  border: 2px dashed var(--baby-blue);
+  border-radius: var(--rounded-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.2s;
+}
+
+.sb-dropzone:hover {
+  background-color: var(--powder-blue);
+}
+
+.sb-photo-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.sb-photo-wrapper {
+  position: relative;
+}
+
+.sb-remove-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 40;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.sb-preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sb-sidebar-polaroid, .sb-placeholder-polaroid {
+  width: 100%;
+}
+
+.sb-empty-photo {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 .scrapbook-container {
   max-width: 1200px;
   margin: 0 auto;

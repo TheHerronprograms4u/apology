@@ -6,7 +6,6 @@ import { Polaroid } from '@/components/ui/Polaroid';
 import { createClient } from '@/lib/supabase-client';
 import { ImagePlus, Save, Calendar, Smile, X, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import styles from '../JournalEntry.module.css';
 
 const MOODS = [
   { label: 'Happy', emoji: '😊' },
@@ -135,47 +134,47 @@ export default function NewJournalEntry() {
 
   return (
     <div className="scrapbook-container">
-      <header className={styles.header}>
+      <header className="sb-header">
         <h1 className="handwritten">New Entry</h1>
-        <div className={styles.actions}>
+        <div className="sb-actions">
           <button 
             onClick={() => handleSave(true)} 
             disabled={loading || uploading}
-            className={styles.btnSecondary}
+            className="sb-btn-secondary"
           >
             Save Draft
           </button>
           <button 
             onClick={() => handleSave(false)} 
             disabled={loading || uploading}
-            className={styles.btnPrimary}
+            className="sb-btn-primary"
           >
             <Save size={18} /> {loading ? 'Saving...' : 'Publish'}
           </button>
         </div>
       </header>
 
-      <div className={styles.layout}>
-        <div className={styles.mainColumn}>
+      <div className="sb-layout">
+        <div className="sb-main-column">
           <input 
             type="text" 
             placeholder="Give this memory a name..." 
-            className={styles.titleInput}
+            className="sb-title-input"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          <div className={styles.metaRow}>
-            <div className={styles.metaItem}>
+          <div className="sb-meta-row">
+            <div className="sb-meta-item">
               <Calendar size={18} />
               <span>{new Date().toLocaleDateString()}</span>
             </div>
-            <div className={styles.metaItem}>
+            <div className="sb-meta-item">
               <Smile size={18} />
               <select 
                 value={mood} 
                 onChange={(e) => setMood(e.target.value)}
-                className={styles.moodSelect}
+                className="sb-mood-select"
               >
                 {MOODS.map(m => (
                   <option key={m.label} value={m.label}>{m.emoji} {m.label}</option>
@@ -191,8 +190,8 @@ export default function NewJournalEntry() {
           />
         </div>
 
-        <aside className={styles.sidebar}>
-          <div className={styles.photoDrop}>
+        <aside className="sb-sidebar">
+          <div className="sb-photo-drop">
             <h3 className="handwritten">Photo Gallery</h3>
             <input 
               type="file" 
@@ -203,27 +202,27 @@ export default function NewJournalEntry() {
               onChange={handleFileUpload}
             />
             <div 
-              className={styles.dropZone} 
+              className="sb-dropzone" 
               onClick={() => fileInputRef.current?.click()}
             >
               {uploading ? <Loader2 className="animate-spin" size={32} /> : <ImagePlus size={32} />}
               <p>{uploading ? 'Uploading...' : 'Click to add photos'}</p>
             </div>
             
-            <div className={styles.photoGrid}>
+            <div className="sb-photo-grid">
               {photos.map((photo, index) => (
-                <div key={index} className={styles.photoWrapper}>
-                  <button className={styles.removeBtn} onClick={() => removePhoto(index)}>
+                <div key={index} className="sb-photo-wrapper">
+                  <button className="sb-remove-btn" onClick={() => removePhoto(index)}>
                     <X size={14} />
                   </button>
-                  <Polaroid rotation={index % 2 === 0 ? -2 : 2} className={styles.sidebarPolaroid}>
-                    <img src={photo.url} alt="Uploaded" className={styles.previewImage} />
+                  <Polaroid rotation={index % 2 === 0 ? -2 : 2} className="sb-sidebar-polaroid">
+                    <img src={photo.url} alt="Uploaded" className="sb-preview-image" />
                   </Polaroid>
                 </div>
               ))}
               {photos.length === 0 && !uploading && (
-                <Polaroid rotation={-2} className={styles.placeholderPolaroid}>
-                  <div className={styles.emptyPhoto}>No photos yet</div>
+                <Polaroid rotation={-2} className="sb-placeholder-polaroid">
+                  <div className="sb-empty-photo">No photos yet</div>
                 </Polaroid>
               )}
             </div>

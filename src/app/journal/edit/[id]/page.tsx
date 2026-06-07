@@ -7,7 +7,6 @@ import { createClient } from '@/lib/supabase-client';
 import { ImagePlus, Save, Calendar, Smile, X, Loader2, ArrowLeft, Trash2 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import styles from '../../JournalEntry.module.css';
 
 const MOODS = [
   { label: 'Happy', emoji: '😊' },
@@ -163,50 +162,50 @@ export default function EditJournalEntry() {
 
   return (
     <div className="scrapbook-container">
-      <header className={styles.header}>
+      <header className="sb-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <Link href="/journal" className={styles.backBtn}><ArrowLeft size={20} /></Link>
+          <Link href="/journal" className="sb-back-btn"><ArrowLeft size={20} /></Link>
           <h1 className="handwritten">Edit Reflection</h1>
         </div>
-        <div className={styles.actions}>
-          <button onClick={handleDelete} className={styles.btnDanger}><Trash2 size={18} /></button>
+        <div className="sb-actions">
+          <button onClick={handleDelete} className="sb-btn-danger"><Trash2 size={18} /></button>
           <button 
             onClick={() => handleSave(true)} 
             disabled={saving || uploading}
-            className={styles.btnSecondary}
+            className="sb-btn-secondary"
           >
             Save as Draft
           </button>
           <button 
             onClick={() => handleSave(false)} 
             disabled={saving || uploading}
-            className={styles.btnPrimary}
+            className="sb-btn-primary"
           >
             <Save size={18} /> {saving ? 'Saving...' : 'Publish'}
           </button>
         </div>
       </header>
 
-      <div className={styles.layout}>
-        <div className={styles.mainColumn}>
+      <div className="sb-layout">
+        <div className="sb-main-column">
           <input 
             type="text" 
-            className={styles.titleInput}
+            className="sb-title-input"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          <div className={styles.metaRow}>
-            <div className={styles.metaItem}>
+          <div className="sb-meta-row">
+            <div className="sb-meta-item">
               <Calendar size={18} />
               <span>Editing Entry</span>
             </div>
-            <div className={styles.metaItem}>
+            <div className="sb-meta-item">
               <Smile size={18} />
               <select 
                 value={mood} 
                 onChange={(e) => setMood(e.target.value)}
-                className={styles.moodSelect}
+                className="sb-mood-select"
               >
                 {MOODS.map(m => (
                   <option key={m.label} value={m.label}>{m.emoji} {m.label}</option>
@@ -221,8 +220,8 @@ export default function EditJournalEntry() {
           />
         </div>
 
-        <aside className={styles.sidebar}>
-          <div className={styles.photoDrop}>
+        <aside className="sb-sidebar">
+          <div className="sb-photo-drop">
             <h3 className="handwritten">Photo Gallery</h3>
             <input 
               type="file" 
@@ -232,19 +231,19 @@ export default function EditJournalEntry() {
               ref={fileInputRef} 
               onChange={handleFileUpload}
             />
-            <div className={styles.dropZone} onClick={() => fileInputRef.current?.click()}>
+            <div className="sb-dropzone" onClick={() => fileInputRef.current?.click()}>
               {uploading ? <Loader2 className="animate-spin" size={32} /> : <ImagePlus size={32} />}
               <p>Add more photos</p>
             </div>
             
-            <div className={styles.photoGrid}>
+            <div className="sb-photo-grid">
               {photos.map((photo, index) => (
-                <div key={index} className={styles.photoWrapper}>
-                  <button className={styles.removeBtn} onClick={() => removePhoto(index)}>
+                <div key={index} className="sb-photo-wrapper">
+                  <button className="sb-remove-btn" onClick={() => removePhoto(index)}>
                     <X size={14} />
                   </button>
-                  <Polaroid rotation={index % 2 === 0 ? -2 : 2} className={styles.sidebarPolaroid}>
-                    <img src={photo.url} alt="Uploaded" className={styles.previewImage} />
+                  <Polaroid rotation={index % 2 === 0 ? -2 : 2} className="sb-sidebar-polaroid">
+                    <img src={photo.url} alt="Uploaded" className="sb-preview-image" />
                   </Polaroid>
                 </div>
               ))}
