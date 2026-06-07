@@ -1,12 +1,46 @@
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   margin-bottom: 4rem;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .header h1 {
   font-size: 3.5rem;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.filterTabs {
+  background: white;
+  padding: 0.4rem;
+  border-radius: 50px;
+  display: flex;
+  gap: 0.5rem;
+  box-shadow: var(--paper-shadow);
+  border: 1px solid var(--baby-blue);
+}
+
+.filterTabs button {
+  background: transparent;
+  border: none;
+  padding: 0.4rem 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.filterTabs button.activeTab {
+  background: var(--powder-blue);
+  color: var(--soft-navy);
 }
 
 .addBtn {
@@ -26,10 +60,32 @@
   transform: translateY(-2px);
 }
 
+.loading, .emptyState {
+  text-align: center;
+  padding: 4rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 3rem;
+  gap: 4rem;
+}
+
+.draftBadge {
+  background: var(--periwinkle);
+  color: var(--soft-navy);
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
 .entryLink {
