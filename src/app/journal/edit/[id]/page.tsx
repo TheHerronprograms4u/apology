@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase-client';
 import { ImagePlus, Save, Calendar, Smile, X, Loader2, ArrowLeft, Trash2 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import styles from '../../new/JournalEntry.module.css';
+import styles from '../../JournalEntry.module.css';
 
 const MOODS = [
   { label: 'Happy', emoji: '😊' },
@@ -77,9 +77,16 @@ export default function EditJournalEntry() {
 
         if (uploadError) throw uploadError;
 
-        const { data: { publicUrl } } = supabase.storage
+        const { data } = supabase.storage
           .from('journal-assets')
           .getPublicUrl(filePath);
+
+        let publicUrl = data.publicUrl;
+        
+        // Safety check: ensure /public/ is present in the URL for public access
+        if (!publicUrl.includes('/public/')) {
+          publicUrl = publicUrl.replace('/object/journal-assets/', '/object/public/journal-assets/');
+        }
 
         setPhotos(prev => [...prev, { url: publicUrl, name: file.name }]);
       }
