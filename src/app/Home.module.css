@@ -1,0 +1,113 @@
+.main {
+  position: relative;
+  min-height: 100vh;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 4rem;
+}
+
+.heroContent {
+  flex: 1;
+}
+
+.title {
+  font-size: 5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 2.5rem;
+}
+
+.ctaContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  background-color: var(--soft-navy);
+  color: white;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.btnSecondary {
+  background-color: var(--sky-blue);
+  color: var(--soft-navy);
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.btn:hover, .btnSecondary:hover {
+  transform: translateY(-2px);
+}
+
+.illustrationArea {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.notebookPlaceholder {
+  width: 250px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--powder-blue);
+}
+
+.heroTape {
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-10deg) !important;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding-top: 4rem;
+}
+
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--rounded-lg);
+  box-shadow: var(--paper-shadow);
+  border: 1px dashed var(--baby-blue);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 4rem 1rem;
+  }
+  
+  .title {
+    font-size: 3.5rem;
+  }
+  
+  .ctaContainer {
+    justify-content: center;
+  }
+}

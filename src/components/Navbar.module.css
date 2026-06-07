@@ -1,0 +1,67 @@
+.navbar {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px dashed var(--baby-blue);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 1rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Indie Flower', cursive;
+  font-size: 1.8rem;
+  color: var(--soft-navy);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.links {
+  display: flex;
+  gap: 2rem;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.link:hover, .link.active {
+  color: var(--soft-navy);
+}
+
+.loginBtn {
+  color: var(--soft-navy);
+  background: var(--powder-blue);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.loginBtn:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .links span {
+    display: none;
+  }
+}

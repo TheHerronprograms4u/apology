@@ -1,0 +1,49 @@
+.editorWrapper {
+  border: 1px dashed var(--baby-blue);
+  border-radius: var(--rounded-lg);
+  overflow: hidden;
+  background: white;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--powder-blue);
+  border-bottom: 1px dashed var(--baby-blue);
+}
+
+.toolbar button {
+  padding: 0.2rem 0.6rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+  color: var(--soft-navy);
+}
+
+.toolbar button:hover {
+  background: var(--baby-blue);
+}
+
+.toolbar button.active {
+  background: var(--sky-blue);
+}
+
+.prose {
+  padding: 1.5rem;
+  min-height: 300px;
+}
+
+.prose :global(.tiptap) {
+  outline: none;
+}
+
+.prose :global(.tiptap p.is-editor-empty:first-child::before) {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--text-muted);
+  pointer-events: none;
+  height: 0;
+}

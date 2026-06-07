@@ -1,0 +1,60 @@
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.header h1 {
+  font-size: 4rem;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.masonry {
+  columns: 3;
+  column-gap: 2rem;
+  padding: 1rem;
+}
+
+.galleryItem {
+  break-inside: avoid;
+  margin-bottom: 3rem;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.polaroid {
+  width: 100%;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: var(--powder-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tape {
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%) !important;
+  z-index: 30;
+}
+
+@media (max-width: 900px) {
+  .masonry {
+    columns: 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .masonry {
+    columns: 1;
+  }
+}

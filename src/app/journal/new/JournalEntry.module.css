@@ -1,0 +1,126 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 3rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btnPrimary {
+  background: var(--soft-navy);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.btnSecondary {
+  background: white;
+  color: var(--soft-navy);
+  border: 1px solid var(--baby-blue);
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 3rem;
+}
+
+.titleInput {
+  width: 100%;
+  font-family: 'Indie Flower', cursive;
+  font-size: 2rem;
+  border: none;
+  background: transparent;
+  border-bottom: 2px dashed var(--baby-blue);
+  margin-bottom: 1.5rem;
+  outline: none;
+  color: var(--soft-navy);
+}
+
+.metaRow {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  color: var(--text-muted);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.moodSelect {
+  border: none;
+  background: var(--powder-blue);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  color: var(--soft-navy);
+  cursor: pointer;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.dropZone {
+  border: 2px dashed var(--baby-blue);
+  border-radius: var(--rounded-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.placeholderPolaroid {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.emptyPhoto {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.tagInput {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: var(--rounded-lg);
+  border: 1px solid var(--baby-blue);
+  margin-top: 1rem;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

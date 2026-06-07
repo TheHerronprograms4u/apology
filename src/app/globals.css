@@ -1,26 +1,93 @@
-@import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Quiet Blue Palette */
+  --powder-blue: #DCEEFF;
+  --baby-blue: #C7E6FF;
+  --sky-blue: #A8D8FF;
+  --periwinkle: #BFCBFF;
+  --white: #FFFFFF;
+  --soft-navy: #4F6480;
+  --background: #F0F7FF;
+  --text-main: #2D3E50;
+  --text-muted: #6B7C93;
+
+  /* Textures and Effects */
+  --paper-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --polaroid-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --rounded-lg: 16px;
+  --rounded-xl: 24px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme='dark'] {
+  --background: #1A2635;
+  --text-main: #E0E7FF;
+  --text-muted: #A8B2D1;
+  --white: #253347;
+  --powder-blue: #2D3E50;
+  --baby-blue: #3A4F6A;
+  --soft-navy: #C7E6FF;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background);
+  color: var(--text-main);
+  font-family: 'Quicksand', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(var(--baby-blue) 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+h1, h2, h3, .handwritten {
+  font-family: 'Indie Flower', cursive;
+  color: var(--soft-navy);
+}
+
+.scrapbook-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Washi Tape Utility */
+.washi-tape {
+  height: 40px;
+  width: 120px;
+  background-color: var(--periwinkle);
+  opacity: 0.7;
+  position: absolute;
+  clip-path: polygon(0% 10%, 10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90%);
+  transform: rotate(-3deg);
+  z-index: 10;
+}
+
+/* Polaroid Utility */
+.polaroid {
+  background: white;
+  padding: 12px 12px 40px 12px;
+  box-shadow: var(--polaroid-shadow);
+  border-radius: 2px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.polaroid:hover {
+  transform: scale(1.02) rotate(1deg);
+}
+
+/* Cloud Divider */
+.cloud-divider {
+  width: 100%;
+  height: 60px;
+  background-color: var(--white);
+  mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,213.3C672,224,768,224,864,208C960,192,1056,160,1152,160C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" fill="black"></path></svg>');
+  mask-size: cover;
+  margin-top: -30px;
 }
