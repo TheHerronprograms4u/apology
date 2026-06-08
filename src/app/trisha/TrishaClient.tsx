@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX, ChevronDown, Music } from 'lucide-react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { Play, Pause, Volume2, VolumeX, ChevronDown, Music, X } from 'lucide-react';
 import styles from './Trisha.module.css';
 
 const PLAYLIST = [
@@ -15,6 +15,7 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(0.5);
   const [progress, setProgress] = useState(0);
+  const [selectedEntry, setSelectedEntry] = useState<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
@@ -202,7 +203,7 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.8, delay: index * 0.2 }}
                 >
-                  <div className={styles.timelineContent}>
+                  <div className={styles.timelineContent} onClick={() => setSelectedEntry(entry)}>
                     <div className={styles.timelineDot} />
                     <div className={styles.entryDate}>{new Date(entry.journal_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                     <h3 className={styles.entryTitle}>{entry.title}</h3>
@@ -210,6 +211,7 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
                       className={styles.entryContent}
                       dangerouslySetInnerHTML={{ __html: entry.content || '' }}
                     />
+                    <span className={styles.readMore}>Read memory &rarr;</span>
                   </div>
                 </motion.div>
               ))}
@@ -269,6 +271,46 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
         </motion.div>
       </section>
 
+      {/* Entry Modal Overlay */}
+      <AnimatePresence>
+        {selectedEntry && (
+          <motion.div 
+            className={styles.entryModalOverlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedEntry(null)}
+          >
+            <motion.div 
+              className={styles.entryModal}
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                className={styles.closeModalBtn}
+                onClick={() => setSelectedEntry(null)}
+              >
+                <X size={24} />
+              </button>
+              
+              <div className={styles.entryDate} style={{ fontSize: '1.5rem' }}>
+                {new Date(selectedEntry.journal_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </div>
+              <h2 className={styles.entryTitle} style={{ fontSize: '3rem', margin: '1rem 0 2rem 0' }}>
+                {selectedEntry.title}
+              </h2>
+              
+              <div 
+                className={styles.modalContent}
+                dangerouslySetInnerHTML={{ __html: selectedEntry.content || '' }}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
