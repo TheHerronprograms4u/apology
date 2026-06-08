@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, ChevronDown, Music, X } from 'lucide-react';
+import { ReadOnlyEditor } from '@/components/ReadOnlyEditor';
 import styles from './Trisha.module.css';
 
 const PLAYLIST = [
@@ -207,10 +208,9 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
                     <div className={styles.timelineDot} />
                     <div className={styles.entryDate}>{new Date(entry.journal_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                     <h3 className={styles.entryTitle}>{entry.title}</h3>
-                    <div 
-                      className={styles.entryContent}
-                      dangerouslySetInnerHTML={{ __html: entry.content || '' }}
-                    />
+                    <div className={styles.entryContent}>
+                      <ReadOnlyEditor content={entry.content} />
+                    </div>
                     <span className={styles.readMore}>Read memory &rarr;</span>
                   </div>
                 </motion.div>
@@ -303,10 +303,9 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
                 {selectedEntry.title}
               </h2>
               
-              <div 
-                className={styles.modalContent}
-                dangerouslySetInnerHTML={{ __html: selectedEntry.content || '' }}
-              />
+              <div className={styles.modalContent}>
+                <ReadOnlyEditor content={selectedEntry.content} />
+              </div>
             </motion.div>
           </motion.div>
         )}
