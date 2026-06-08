@@ -1,0 +1,181 @@
+.playerWrapper {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  font-family: 'Quicksand', sans-serif;
+  gap: 12px;
+}
+
+.playerCard {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--powder-blue, #e1eef6);
+  border: 2px solid var(--baby-blue, #a3c9a8);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
+  position: relative;
+}
+
+.playerCard:hover {
+  transform: scale(1.1);
+  background: #d4e7f3;
+}
+
+.iconContainer {
+  color: var(--soft-navy, #2c3e50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CD Rotation Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinning {
+  animation: spin 6s linear infinite;
+}
+
+.pulseIcon {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.controlsPanel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px dashed var(--baby-blue, #a3c9a8);
+  border-radius: 30px;
+  padding: 8px 16px 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transform-origin: right center;
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-right: -10px; /* Slight overlap for aesthetic continuity */
+  padding-right: 60px; /* Leave space for the floating round button */
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+}
+
+/* Adjust wrapper layout when expanded to overlay */
+.expanded {
+  flex-direction: row-reverse;
+}
+
+.songInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--soft-navy, #2c3e50);
+  line-height: 1.2;
+}
+
+.status {
+  font-size: 0.7rem;
+  color: var(--text-muted, #7f8c8d);
+  font-weight: 500;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.ctrlBtn {
+  background: white;
+  border: 1px solid var(--powder-blue, #e1eef6);
+  color: var(--soft-navy, #2c3e50);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+}
+
+.ctrlBtn:hover {
+  background: var(--powder-blue, #e1eef6);
+  transform: translateY(-1px);
+}
+
+.ctrlBtn:active {
+  transform: translateY(0);
+}
+
+/* Tooltip Alert */
+.tooltip {
+  position: absolute;
+  bottom: 65px;
+  right: 0;
+  background: var(--soft-navy, #2c3e50);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: bounce 2s infinite;
+  cursor: pointer;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  right: 20px;
+  border-width: 6px 6px 0;
+  border-style: solid;
+  border-color: var(--soft-navy, #2c3e50) transparent;
+  display: block;
+  width: 0;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
