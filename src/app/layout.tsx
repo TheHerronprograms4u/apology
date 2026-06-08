@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/Navbar";
 import { MusicPlayer } from "@/components/MusicPlayer";
+import { AccessGate } from "@/components/AccessGate";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Quicksand:wght@300..700&display=swap" rel="stylesheet" />
       </head>
       <body>
+        <AccessGate />
         <Navbar />
         {children}
         <MusicPlayer />

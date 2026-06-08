@@ -41,6 +41,8 @@ export const Navbar = () => {
     { href: '/timeline', icon: Calendar, label: 'Timeline' },
   ];
 
+  if (pathname?.startsWith('/trisha')) return null;
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>

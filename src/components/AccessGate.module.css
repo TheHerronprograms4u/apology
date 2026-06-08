@@ -1,0 +1,187 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.modal {
+  position: relative;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 8px 32px rgba(131, 142, 171, 0.15), 0 0 0 2px rgba(255, 255, 255, 0.8) inset;
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  animation: scaleUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  overflow: hidden;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+}
+
+.heading {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0 0 0.5rem 0;
+}
+
+.subheading {
+  font-family: 'Indie Flower', cursive;
+  font-size: 1.5rem;
+  color: #64748b;
+  margin: 0 0 2.5rem 0;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.selectBtn {
+  position: relative;
+  width: 100%;
+  padding: 1.25rem;
+  border-radius: 16px;
+  border: none;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.selectBtn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s ease;
+}
+
+.selectBtn:active::after {
+  transform: translate(-50%, -50%) scale(2);
+  transition: transform 0s;
+}
+
+.harronBtn {
+  background: #f1f5f9;
+  color: #475569;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
+}
+
+.harronBtn:hover {
+  background: #e2e8f0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(148, 163, 184, 0.2);
+}
+
+.trishaBtn {
+  background: linear-gradient(135deg, #ffc3a0 0%, #ffafbd 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(255, 175, 189, 0.4);
+}
+
+.trishaBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 175, 189, 0.6);
+}
+
+.sparkle {
+  font-size: 1.2rem;
+  animation: float 2s ease-in-out infinite;
+}
+
+/* Particles */
+.particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #ffafbd;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: floatParticle 4s ease-in-out infinite;
+}
+
+/* Generate random positions for particles */
+.particle0 { top: 10%; left: 20%; animation-delay: 0s; }
+.particle1 { top: 30%; left: 80%; animation-delay: 0.5s; width: 4px; height: 4px; background: #a1c4fd; }
+.particle2 { top: 70%; left: 15%; animation-delay: 1s; }
+.particle3 { top: 85%; left: 75%; animation-delay: 1.5s; width: 8px; height: 8px; background: #ffd1ff; }
+.particle4 { top: 40%; left: 10%; animation-delay: 2s; }
+.particle5 { top: 50%; left: 90%; animation-delay: 0.2s; width: 5px; height: 5px; }
+.particle6 { top: 15%; left: 60%; animation-delay: 0.8s; background: #a1c4fd; }
+.particle7 { top: 80%; left: 40%; animation-delay: 1.2s; width: 7px; height: 7px; }
+.particle8 { top: 60%; left: 30%; animation-delay: 1.8s; }
+.particle9 { top: 25%; left: 40%; animation-delay: 0.3s; background: #ffd1ff; }
+.particle10 { top: 90%; left: 20%; animation-delay: 0.7s; }
+.particle11 { top: 10%; left: 90%; animation-delay: 1.1s; width: 5px; height: 5px; }
+.particle12 { top: 45%; left: 55%; animation-delay: 1.6s; background: #a1c4fd; }
+.particle13 { top: 75%; left: 85%; animation-delay: 0.4s; width: 4px; height: 4px; }
+.particle14 { top: 35%; left: 25%; animation-delay: 0.9s; background: #ffd1ff; }
+
+@keyframes fadeIn {
+  from { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+  to { opacity: 1; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes floatParticle {
+  0% { transform: translateY(0) scale(1); opacity: 0.3; }
+  50% { transform: translateY(-15px) scale(1.2); opacity: 0.7; }
+  100% { transform: translateY(0) scale(1); opacity: 0.3; }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 2.5rem 1.5rem;
+  }
+  .heading { font-size: 1.75rem; }
+  .subheading { font-size: 1.25rem; }
+}

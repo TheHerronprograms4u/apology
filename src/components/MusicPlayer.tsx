@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Play, Pause, Volume2, VolumeX, Music, SkipForward } from 'lucide-react';
 import styles from './MusicPlayer.module.css';
 
@@ -10,6 +11,7 @@ const PLAYLIST = [
 ];
 
 export const MusicPlayer = () => {
+  const pathname = usePathname();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -125,6 +127,8 @@ export const MusicPlayer = () => {
   const handleNext = () => {
     setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % PLAYLIST.length);
   };
+
+  if (pathname?.startsWith('/trisha')) return null;
 
   return (
     <div className={`${styles.playerWrapper} ${isExpanded ? styles.expanded : ''}`}>
