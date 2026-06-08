@@ -159,7 +159,7 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5, duration: 1 }}
         >
-          Our Story
+          For the past week...
         </motion.h1>
         <motion.p 
           className={styles.heroSubtitle}
@@ -167,7 +167,7 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1, duration: 1 }}
         >
-          A digital scrapbook of memories, thoughts, and love.
+          This is what I've been up to...
         </motion.p>
         
         <motion.div 
