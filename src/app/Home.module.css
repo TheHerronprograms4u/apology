@@ -96,6 +96,128 @@
   border: 1px dashed var(--baby-blue);
 }
 
+/* Recent Thoughts */
+.recentEntries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.recentEntry {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.recentEntry:hover {
+  background: var(--powder-blue);
+  border-color: var(--baby-blue);
+  transform: translateX(4px);
+}
+
+.entryTitle {
+  font-family: 'Indie Flower', cursive;
+  font-size: 1.2rem;
+  color: var(--soft-navy);
+  margin-bottom: 0.3rem;
+}
+
+.entryMeta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.entryMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.viewAllLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--baby-blue);
+  color: var(--soft-navy);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: gap 0.2s ease;
+}
+
+.viewAllLink:hover {
+  gap: 0.7rem;
+}
+
+/* Mood of the Week */
+.moodList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.moodRow {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.moodLabel {
+  min-width: 80px;
+  font-size: 0.9rem;
+  color: var(--soft-navy);
+  text-transform: capitalize;
+}
+
+.moodBar {
+  flex: 1;
+  height: 8px;
+  background: var(--powder-blue);
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.moodBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--sky-blue), var(--periwinkle));
+  border-radius: 50px;
+  min-width: 8px;
+  transition: width 0.4s ease;
+}
+
+.moodCount {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  min-width: 20px;
+  text-align: right;
+}
+
+/* Empty state hint */
+.emptyHint {
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.emptyHint a {
+  color: var(--soft-navy);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: 3px;
+}
+
 @media (max-width: 768px) {
   .hero {
     flex-direction: column;
