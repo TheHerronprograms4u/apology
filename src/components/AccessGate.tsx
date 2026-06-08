@@ -7,6 +7,10 @@ import styles from './AccessGate.module.css';
 
 export function AccessGate() {
   const [showModal, setShowModal] = useState(false);
+  const [challengeStep, setChallengeStep] = useState(0); // 0: select, 1: question, 2: failed
+  const [challengeAnswer, setChallengeAnswer] = useState('');
+  const [attempts, setAttempts] = useState(0);
+  const [challengeError, setChallengeError] = useState('');
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
@@ -23,8 +27,6 @@ export function AccessGate() {
         if (!accessUser) {
           setShowModal(true);
         } else if (accessUser === 'trisha' && !pathname.startsWith('/trisha') && !pathname.startsWith('/login')) {
-          // If they chose Trisha and try to access normal pages, redirect to Trisha experience
-          // Unless they are already on /trisha
           router.push('/trisha');
         }
       }
@@ -34,10 +36,33 @@ export function AccessGate() {
   }, [pathname, router, supabase.auth]);
 
   const handleSelect = (user: string) => {
-    sessionStorage.setItem('access_user', user);
-    setShowModal(false);
     if (user === 'trisha') {
+      setChallengeStep(1);
+    } else {
+      sessionStorage.setItem('access_user', user);
+      setShowModal(false);
+    }
+  };
+
+  const handleChallengeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (challengeAnswer.trim() === '10/22/25') {
+      sessionStorage.setItem('access_user', 'trisha');
+      setShowModal(false);
       router.push('/trisha');
+    } else {
+      const nextAttempts = attempts + 1;
+      setAttempts(nextAttempts);
+      if (nextAttempts >= 3) {
+        setChallengeStep(2);
+        setTimeout(async () => {
+          await supabase.auth.signOut();
+          window.location.href = '/login';
+        }, 4000);
+      } else {
+        setChallengeAnswer('');
+        setChallengeError(`Oops! Try again! (${3 - nextAttempts} attempts left) 🥺`);
+      }
     }
   };
 
@@ -54,24 +79,58 @@ export function AccessGate() {
         </div>
         
         <div className={styles.content}>
-          <h2 className={styles.heading}>Welcome Back</h2>
-          <p className={styles.subheading}>Who's accessing the Journal?</p>
-          
-          <div className={styles.buttonGroup}>
-            <button 
-              className={`${styles.selectBtn} ${styles.harronBtn}`}
-              onClick={() => handleSelect('harron')}
-            >
-              <span className={styles.btnText}>Harron</span>
-            </button>
-            <button 
-              className={`${styles.selectBtn} ${styles.trishaBtn}`}
-              onClick={() => handleSelect('trisha')}
-            >
-              <span className={styles.btnText}>Trisha</span>
-              <span className={styles.sparkle}>✨</span>
-            </button>
-          </div>
+          {challengeStep === 0 && (
+            <>
+              <h2 className={styles.heading}>Welcome Back</h2>
+              <p className={styles.subheading}>Who's accessing the Journal?</p>
+              
+              <div className={styles.buttonGroup}>
+                <button 
+                  className={`${styles.selectBtn} ${styles.harronBtn}`}
+                  onClick={() => handleSelect('harron')}
+                >
+                  <span className={styles.btnText}>Harron</span>
+                </button>
+                <button 
+                  className={`${styles.selectBtn} ${styles.trishaBtn}`}
+                  onClick={() => handleSelect('trisha')}
+                >
+                  <span className={styles.btnText}>Trisha</span>
+                  <span className={styles.sparkle}>✨</span>
+                </button>
+              </div>
+            </>
+          )}
+
+          {challengeStep === 1 && (
+            <form onSubmit={handleChallengeSubmit} className={styles.challengeForm}>
+              <h2 className={styles.heading}>Just to be sure...</h2>
+              <p className={styles.subheading} style={{ marginBottom: '1.5rem' }}>When is our monthsary?</p>
+              
+              <input 
+                type="text" 
+                className={styles.challengeInput}
+                value={challengeAnswer}
+                onChange={(e) => setChallengeAnswer(e.target.value)}
+                placeholder="MM/DD/YY"
+                autoFocus
+              />
+              
+              {challengeError && <p className={styles.errorText}>{challengeError}</p>}
+              
+              <button type="submit" className={`${styles.selectBtn} ${styles.trishaBtn}`} style={{ marginTop: '1.5rem' }}>
+                Verify
+              </button>
+            </form>
+          )}
+
+          {challengeStep === 2 && (
+            <div className={styles.failedChallenge}>
+              <div style={{ fontSize: '5rem', marginBottom: '1rem', animation: 'shake 0.5s infinite' }}>😡</div>
+              <h2 className={styles.heading} style={{ color: '#ef4444' }}>You're not Trisha or Harron!!</h2>
+              <p className={styles.subheading}>Logging you out...</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
