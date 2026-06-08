@@ -34,11 +34,7 @@ export function HeroSlideshow({ images }: { images: any[] }) {
   const currentImage = images[currentIndex];
 
   return (
-    <div className={styles.illustrationArea} style={{ position: 'relative', width: '280px', height: '320px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <div style={{ position: 'absolute', top: '-15px', right: '40px', zIndex: 20 }}>
-        <WashiTape rotation={-15} />
-      </div>
-      
+    <div className={styles.illustrationArea} style={{ position: 'relative', width: '280px', height: '350px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <AnimatePresence mode="wait">
         <motion.div
           key={currentIndex}
@@ -46,15 +42,21 @@ export function HeroSlideshow({ images }: { images: any[] }) {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.8 }}
-          style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+          style={{ position: 'relative', width: '250px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         >
-          <Polaroid rotation={5} caption={currentImage.file_name} className={styles.heroPolaroid}>
-            <img 
-              src={currentImage.url} 
-              alt={currentImage.file_name} 
-              style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }} 
-            />
-          </Polaroid>
+          <div style={{ position: 'absolute', top: '-15px', zIndex: 30 }}>
+            <WashiTape rotation={-15} />
+          </div>
+          
+          <div style={{ width: '100%' }}>
+            <Polaroid rotation={5} caption={currentImage.file_name}>
+              <img 
+                src={currentImage.url} 
+                alt={currentImage.file_name} 
+                style={{ width: '100%', height: '226px', objectFit: 'cover', borderRadius: '4px' }} 
+              />
+            </Polaroid>
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>
