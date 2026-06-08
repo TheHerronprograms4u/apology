@@ -31,13 +31,25 @@ export async function updateSession(request: NextRequest) {
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  const { data: { user } } = await supabase.auth.getUser()
+  console.log(`[Middleware] Checking path: ${request.nextUrl.pathname}`);
+  const allCookies = request.cookies.getAll();
+  console.log(`[Middleware] Cookies count: ${allCookies.length}`);
+  const sbCookies = allCookies.filter(c => c.name.startsWith('sb-'));
+  console.log(`[Middleware] Supabase cookies:`, sbCookies.map(c => c.name));
+
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError) {
+    console.error(`[Middleware] Auth error:`, authError.message);
+  } else {
+    console.log(`[Middleware] User found:`, user ? user.email : 'none');
+  }
 
   const isProtectedPath = request.nextUrl.pathname.startsWith('/admin') || 
                           request.nextUrl.pathname.startsWith('/journal/new') ||
                           request.nextUrl.pathname.startsWith('/journal/edit')
 
   if (isProtectedPath && !user) {
+    console.log(`[Middleware] Redirecting to /login due to missing user`);
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     url.searchParams.set('redirectTo', request.nextUrl.pathname)
