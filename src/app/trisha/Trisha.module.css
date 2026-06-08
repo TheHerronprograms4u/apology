@@ -279,15 +279,17 @@
 
 .timelineItem {
   display: flex;
-  justify-content: flex-end;
-  padding-right: 50%;
   position: relative;
   margin-bottom: 4rem;
 }
 
-.timelineItem:nth-child(even) {
+.timelineItemLeft {
+  justify-content: flex-end;
+  padding-right: 50%;
+}
+
+.timelineItemRight {
   justify-content: flex-start;
-  padding-right: 0;
   padding-left: 50%;
 }
 
@@ -307,19 +309,18 @@
   box-shadow: 0 15px 40px rgba(0,0,0,0.1);
 }
 
-.timelineItem:nth-child(odd) .timelineContent {
+.timelineItemLeft .timelineContent {
   margin-right: 2rem;
 }
 
-.timelineItem:nth-child(even) .timelineContent {
+.timelineItemRight .timelineContent {
   margin-left: 2rem;
 }
 
 .timelineDot {
   position: absolute;
   top: 50%;
-  right: -2rem;
-  transform: translate(50%, -50%);
+  transform: translateY(-50%);
   width: 20px;
   height: 20px;
   background: #ff9a9e;
@@ -327,10 +328,14 @@
   box-shadow: 0 0 0 4px white, 0 0 0 8px #fecfef;
 }
 
-.timelineItem:nth-child(even) .timelineDot {
+.timelineItemLeft .timelineDot {
+  right: -2rem;
+  transform: translate(50%, -50%);
+}
+
+.timelineItemRight .timelineDot {
   left: -2rem;
   transform: translate(-50%, -50%);
-  right: auto;
 }
 
 .cinematicEnding {

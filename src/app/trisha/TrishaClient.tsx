@@ -21,15 +21,6 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
 
-  // Chunk entries into 4 chapters (since 5th is Reflection)
-  const chunkSize = Math.ceil(entries.length / 4) || 1;
-  const chapters = [
-    { title: 'Chapter 1: The Beginning', items: entries.slice(0, chunkSize) },
-    { title: 'Chapter 2: Special Moments', items: entries.slice(chunkSize, chunkSize * 2) },
-    { title: 'Chapter 3: Growth and Memories', items: entries.slice(chunkSize * 2, chunkSize * 3) },
-    { title: 'Chapter 4: Important Milestones', items: entries.slice(chunkSize * 3, chunkSize * 4) }
-  ];
-
   useEffect(() => {
     // Auto-play music on mount
     const audio = new Audio(PLAYLIST[0].url);
@@ -180,10 +171,11 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
         </motion.div>
       </motion.section>
 
-      {/* Chapters (Journal Journey & Timeline) */}
-      {chapters.map((chapter, chapterIndex) => (
-        chapter.items.length > 0 && (
-          <section key={chapterIndex} className={styles.chapter}>
+      {/* Entries (Journal Journey & Timeline) */}
+      {entries.map((entry: any, index: number) => {
+        const isLeft = index % 2 === 0;
+        return (
+          <section key={entry.id} className={styles.chapter}>
             <motion.h2 
               className={styles.chapterTitle}
               initial={{ opacity: 0, y: 50 }}
@@ -191,34 +183,30 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8 }}
             >
-              {chapter.title}
+              {entry.title}
             </motion.h2>
 
             <div className={styles.timeline}>
-              {chapter.items.map((entry: any, index: number) => (
-                <motion.div 
-                  key={entry.id} 
-                  className={styles.timelineItem}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, delay: index * 0.2 }}
-                >
-                  <div className={styles.timelineContent} onClick={() => setSelectedEntry(entry)}>
-                    <div className={styles.timelineDot} />
-                    <div className={styles.entryDate}>{new Date(entry.journal_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-                    <h3 className={styles.entryTitle}>{entry.title}</h3>
-                    <div className={styles.entryContent}>
-                      <ReadOnlyEditor content={entry.content} />
-                    </div>
-                    <span className={styles.readMore}>Read memory &rarr;</span>
+              <motion.div 
+                className={`${styles.timelineItem} ${isLeft ? styles.timelineItemLeft : styles.timelineItemRight}`}
+                initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                <div className={styles.timelineContent} onClick={() => setSelectedEntry(entry)}>
+                  <div className={styles.timelineDot} />
+                  <div className={styles.entryDate}>{new Date(entry.journal_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                  <div className={styles.entryContent}>
+                    <ReadOnlyEditor content={entry.content} />
                   </div>
-                </motion.div>
-              ))}
+                  <span className={styles.readMore}>Read memory &rarr;</span>
+                </div>
+              </motion.div>
             </div>
           </section>
-        )
-      ))}
+        );
+      })}
 
       {/* Photo Gallery Section */}
       {memories.length > 0 && (
