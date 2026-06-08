@@ -34,10 +34,13 @@ export default async function Home() {
   // Fetch images for slideshow
   const { data: attachmentsData } = await supabase
     .from('attachments')
-    .select('url, file_name')
+    .select('url, file_name, entries(title)')
     .order('created_at', { ascending: false });
     
-  const images = attachmentsData || [];
+  const images = (attachmentsData || []).map((img: any) => ({
+    url: img.url,
+    file_name: img.entries?.title || img.file_name || 'Memory'
+  }));
 
   // Count mood occurrences for the week
   const moodCounts: Record<string, number> = {};

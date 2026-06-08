@@ -13,7 +13,7 @@ export function HeroSlideshow({ images }: { images: any[] }) {
     if (images && images.length > 1) {
       const interval = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % images.length);
-      }, 4000); // Change image every 4 seconds
+      }, 8000); // Change image every 8 seconds
       return () => clearInterval(interval);
     }
   }, [images]);
