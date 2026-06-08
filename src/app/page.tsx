@@ -4,6 +4,7 @@ import { FloatingStars } from '@/components/ui/FloatingStars';
 import { Polaroid } from '@/components/ui/Polaroid';
 import { WashiTape } from '@/components/ui/WashiTape';
 import { createClient } from '@/lib/supabase-server';
+import { HeroSlideshow } from '@/components/HeroSlideshow';
 import styles from './Home.module.css';
 
 export default async function Home() {
@@ -29,6 +30,14 @@ export default async function Home() {
 
   const entries = recentEntries || [];
   const moods = weekEntries || [];
+
+  // Fetch images for slideshow
+  const { data: attachmentsData } = await supabase
+    .from('attachments')
+    .select('url, file_name')
+    .order('created_at', { ascending: false });
+    
+  const images = attachmentsData || [];
 
   // Count mood occurrences for the week
   const moodCounts: Record<string, number> = {};
@@ -58,15 +67,7 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className={styles.illustrationArea}>
-          <WashiTape rotation={-15} className={styles.heroTape} />
-          <Polaroid rotation={5} caption="Starting today..." className={styles.heroPolaroid}>
-            <div className={styles.notebookPlaceholder}>
-              {/* This would be an illustration or an icon */}
-              <span style={{ fontSize: '4rem' }}>📓</span>
-            </div>
-          </Polaroid>
-        </div>
+        <HeroSlideshow images={images} />
       </section>
 
       <div className="cloud-divider" />
