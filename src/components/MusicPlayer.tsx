@@ -1,28 +1,44 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Play, Pause, Volume2, VolumeX, Music } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Music, SkipForward } from 'lucide-react';
 import styles from './MusicPlayer.module.css';
+
+const PLAYLIST = [
+  { title: 'Mundo', url: '/Mundo.mp3' },
+  { title: 'Waltz of Four Left Feet', url: '/Waltz of Four Left Feet.mp3' }
+];
 
 export const MusicPlayer = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true);
 
+  // Initialize audio on mount
   useEffect(() => {
-    // Initialize audio element
-    const audio = new Audio('/Mundo.mp3');
-    audio.loop = true;
+    const savedTrackIndex = parseInt(localStorage.getItem('music-track-index') || '0', 10);
+    const validTrackIndex = savedTrackIndex >= 0 && savedTrackIndex < PLAYLIST.length ? savedTrackIndex : 0;
+    setCurrentTrackIndex(validTrackIndex);
+
+    const audio = new Audio(PLAYLIST[validTrackIndex].url);
+    audio.loop = false; // We want to advance to the next track when it ends
     audioRef.current = audio;
 
-    // Load user preferences from localStorage
     const savedPlayState = localStorage.getItem('music-playing') === 'true';
     const savedMutedState = localStorage.getItem('music-muted') === 'true';
 
     setIsMuted(savedMutedState);
     audio.muted = savedMutedState;
+
+    // Handle track ending
+    const handleTrackEnd = () => {
+      handleNext();
+    };
+
+    audio.addEventListener('ended', handleTrackEnd);
 
     // Try to auto-play if saved play state is true, or on first interaction
     const handleFirstInteraction = async () => {
@@ -35,17 +51,14 @@ export const MusicPlayer = () => {
           console.log('Autoplay blocked by browser. User interaction required.');
         }
       }
-      // Remove listeners after first attempt
       window.removeEventListener('click', handleFirstInteraction);
       window.removeEventListener('keydown', handleFirstInteraction);
     };
 
     if (savedPlayState) {
-      // If user had it playing before, try to play on interaction
       window.addEventListener('click', handleFirstInteraction);
       window.addEventListener('keydown', handleFirstInteraction);
     } else {
-      // Otherwise, show tooltip to encourage them to play
       const timer = setTimeout(() => {
         setShowTooltip(true);
       }, 3000);
@@ -54,10 +67,32 @@ export const MusicPlayer = () => {
 
     return () => {
       audio.pause();
+      audio.removeEventListener('ended', handleTrackEnd);
       window.removeEventListener('click', handleFirstInteraction);
       window.removeEventListener('keydown', handleFirstInteraction);
     };
   }, []);
+
+  // Update audio source when track changes
+  useEffect(() => {
+    if (!audioRef.current) return;
+    
+    const currentSrc = PLAYLIST[currentTrackIndex].url;
+    // Decode URLs to safely compare pathnames even with spaces/percent encoding
+    const audioUrl = decodeURIComponent(new URL(audioRef.current.src, window.location.href).pathname);
+    const targetUrl = decodeURIComponent(new URL(currentSrc, window.location.href).pathname);
+
+    if (audioUrl !== targetUrl) {
+      const wasPlaying = isPlaying;
+      audioRef.current.src = currentSrc;
+      localStorage.setItem('music-track-index', String(currentTrackIndex));
+      
+      if (wasPlaying) {
+        audioRef.current.play()
+          .catch(err => console.error('Error auto-playing changed track:', err));
+      }
+    }
+  }, [currentTrackIndex, isPlaying]);
 
   const togglePlay = () => {
     if (!audioRef.current) return;
@@ -87,6 +122,10 @@ export const MusicPlayer = () => {
     localStorage.setItem('music-muted', String(nextMuted));
   };
 
+  const handleNext = () => {
+    setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % PLAYLIST.length);
+  };
+
   return (
     <div className={`${styles.playerWrapper} ${isExpanded ? styles.expanded : ''}`}>
       {showTooltip && !isPlaying && (
@@ -107,12 +146,15 @@ export const MusicPlayer = () => {
       {isExpanded && (
         <div className={styles.controlsPanel}>
           <div className={styles.songInfo}>
-            <span className={styles.title}>Mundo</span>
+            <span className={styles.title}>{PLAYLIST[currentTrackIndex].title}</span>
             <span className={styles.status}>{isPlaying ? 'Playing' : 'Paused'}</span>
           </div>
           <div className={styles.buttons}>
             <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} className={styles.ctrlBtn} title={isPlaying ? 'Pause' : 'Play'}>
               {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+            </button>
+            <button onClick={(e) => { e.stopPropagation(); handleNext(); }} className={styles.ctrlBtn} title="Next Track">
+              <SkipForward size={16} />
             </button>
             <button onClick={(e) => { e.stopPropagation(); toggleMute(); }} className={styles.ctrlBtn} title={isMuted ? 'Unmute' : 'Mute'}>
               {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
