@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { createClient } from '@/lib/supabase-client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './Login.module.css';
 
 export default function LoginPage() {
@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,11 +26,14 @@ export default function LoginPage() {
 
     if (error) {
       setError(error.message);
+      setLoading(false);
     } else {
-      router.push('/');
+      // Use router.refresh() to update server components with the new session,
+      // then navigate. This ensures the middleware picks up the fresh auth cookies.
+      const redirectTo = searchParams.get('redirectTo') || '/';
       router.refresh();
+      router.push(redirectTo);
     }
-    setLoading(false);
   };
 
   return (
@@ -68,3 +72,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

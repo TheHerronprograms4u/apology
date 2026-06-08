@@ -85,7 +85,7 @@ export default function NewJournalEntry() {
       
       if (!user) {
         alert('You must be logged in to save entries.');
-        router.push('/login');
+        router.push('/login?redirectTo=/journal/new');
         return;
       }
 
