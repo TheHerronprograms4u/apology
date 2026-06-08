@@ -115,6 +115,9 @@ export function AccessGate() {
                 placeholder="MM/DD/YY"
                 autoFocus
               />
+              <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.5rem' }}>
+                * Please separate the numbers using "/"
+              </p>
               
               {challengeError && <p className={styles.errorText}>{challengeError}</p>}
               
