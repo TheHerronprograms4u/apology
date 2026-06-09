@@ -32,13 +32,26 @@ export default async function Home() {
     .gte('journal_date', sevenDaysAgo.toISOString().split('T')[0])
     .order('journal_date', { ascending: false });
 
-  if (user && user.email === 'moncadatrisha600@gmail.com') {
+  if (user) {
+    const isTrishaLoggedIn = user.email === 'moncadatrisha600@gmail.com';
+    
     if (accessUser === 'harron') {
-      entriesQuery = entriesQuery.neq('user_id', user.id);
-      weekQuery = weekQuery.neq('user_id', user.id);
+      if (isTrishaLoggedIn) {
+        entriesQuery = entriesQuery.or(`user_id.neq.${user.id},user_id.is.null`);
+        weekQuery = weekQuery.or(`user_id.neq.${user.id},user_id.is.null`);
+      } else {
+        entriesQuery = entriesQuery.or(`user_id.eq.${user.id},user_id.is.null`);
+        weekQuery = weekQuery.or(`user_id.eq.${user.id},user_id.is.null`);
+      }
     } else {
-      entriesQuery = entriesQuery.eq('user_id', user.id);
-      weekQuery = weekQuery.eq('user_id', user.id);
+      // accessUser === 'trisha'
+      if (isTrishaLoggedIn) {
+        entriesQuery = entriesQuery.eq('user_id', user.id);
+        weekQuery = weekQuery.eq('user_id', user.id);
+      } else {
+        entriesQuery = entriesQuery.neq('user_id', user.id).not('user_id', 'is', null);
+        weekQuery = weekQuery.neq('user_id', user.id).not('user_id', 'is', null);
+      }
     }
   }
 

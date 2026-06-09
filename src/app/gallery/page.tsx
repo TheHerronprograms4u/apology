@@ -17,7 +17,7 @@ export default function GalleryPage() {
       const { data: { user } } = await supabase.auth.getUser();
       const accessUser = sessionStorage.getItem('access_user');
 
-      let query = supabase
+      const { data, error } = await supabase
         .from('attachments')
         .select(`
           id,
@@ -32,20 +32,30 @@ export default function GalleryPage() {
         `)
         .order('created_at', { ascending: false });
 
-      if (user && user.email === 'moncadatrisha600@gmail.com') {
-        if (accessUser === 'harron') {
-          query = query.neq('entries.user_id', user.id);
-        } else {
-          query = query.eq('entries.user_id', user.id);
-        }
-      }
-
-      const { data, error } = await query;
-
       if (error) {
         console.error('Error fetching memories:', error);
       } else {
-        setMemories(data || []);
+        let filteredMemories = data || [];
+        if (user) {
+          const isTrishaLoggedIn = user.email === 'moncadatrisha600@gmail.com';
+          filteredMemories = filteredMemories.filter((mem: any) => {
+            const entryUserId = mem.entries?.user_id;
+            if (accessUser === 'harron') {
+              if (isTrishaLoggedIn) {
+                return entryUserId !== user.id; // Not Trisha's
+              } else {
+                return entryUserId === user.id || entryUserId == null; // Harron's
+              }
+            } else {
+              if (isTrishaLoggedIn) {
+                return entryUserId === user.id; // Trisha's
+              } else {
+                return entryUserId !== user.id && entryUserId != null; // Trisha's
+              }
+            }
+          });
+        }
+        setMemories(filteredMemories);
       }
       setLoading(false);
     };

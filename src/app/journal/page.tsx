@@ -26,11 +26,22 @@ export default function JournalListPage() {
         .select('*')
         .order('journal_date', { ascending: false });
 
-      if (user && user.email === 'moncadatrisha600@gmail.com') {
+      if (user) {
+        const isTrishaLoggedIn = user.email === 'moncadatrisha600@gmail.com';
+        
         if (accessUser === 'harron') {
-          query = query.neq('user_id', user.id);
+          if (isTrishaLoggedIn) {
+            query = query.or(`user_id.neq.${user.id},user_id.is.null`);
+          } else {
+            query = query.or(`user_id.eq.${user.id},user_id.is.null`);
+          }
         } else {
-          query = query.eq('user_id', user.id);
+          // accessUser === 'trisha'
+          if (isTrishaLoggedIn) {
+            query = query.eq('user_id', user.id);
+          } else {
+            query = query.neq('user_id', user.id).not('user_id', 'is', null);
+          }
         }
       }
 

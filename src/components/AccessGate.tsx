@@ -29,8 +29,6 @@ export function AccessGate() {
         const accessUser = sessionStorage.getItem('access_user');
         if (!accessUser) {
           setShowModal(true);
-        } else if (email !== 'moncadatrisha600@gmail.com' && accessUser === 'trisha' && !pathname.startsWith('/trisha') && !pathname.startsWith('/login')) {
-          router.push('/trisha');
         } else if (email === 'moncadatrisha600@gmail.com' && accessUser === 'trisha' && pathname.startsWith('/trisha')) {
           router.push('/');
         }
@@ -58,7 +56,9 @@ export function AccessGate() {
       sessionStorage.setItem('access_user', 'trisha');
       document.cookie = `access_user=trisha; path=/;`;
       setShowModal(false);
-      router.push('/trisha');
+      if (pathname.startsWith('/trisha')) {
+        router.push('/');
+      }
       router.refresh();
     } else {
       const nextAttempts = attempts + 1;
