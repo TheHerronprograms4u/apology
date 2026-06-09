@@ -35,23 +35,14 @@ export default async function Home() {
   if (user) {
     const isTrishaLoggedIn = user.email === 'moncadatrisha600@gmail.com';
     
-    if (accessUser === 'harron') {
-      if (isTrishaLoggedIn) {
-        entriesQuery = entriesQuery.or(`user_id.neq.${user.id},user_id.is.null`);
-        weekQuery = weekQuery.or(`user_id.neq.${user.id},user_id.is.null`);
-      } else {
-        entriesQuery = entriesQuery.or(`user_id.eq.${user.id},user_id.is.null`);
-        weekQuery = weekQuery.or(`user_id.eq.${user.id},user_id.is.null`);
-      }
+    if (isTrishaLoggedIn) {
+      // Trisha only sees her own entries
+      entriesQuery = entriesQuery.eq('user_id', user.id);
+      weekQuery = weekQuery.eq('user_id', user.id);
     } else {
-      // accessUser === 'trisha'
-      if (isTrishaLoggedIn) {
-        entriesQuery = entriesQuery.eq('user_id', user.id);
-        weekQuery = weekQuery.eq('user_id', user.id);
-      } else {
-        entriesQuery = entriesQuery.neq('user_id', user.id).not('user_id', 'is', null);
-        weekQuery = weekQuery.neq('user_id', user.id).not('user_id', 'is', null);
-      }
+      // Harron only sees his own entries (including original null ones)
+      entriesQuery = entriesQuery.or(`user_id.eq.${user.id},user_id.is.null`);
+      weekQuery = weekQuery.or(`user_id.eq.${user.id},user_id.is.null`);
     }
   }
 

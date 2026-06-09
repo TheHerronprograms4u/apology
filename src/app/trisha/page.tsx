@@ -18,23 +18,12 @@ export default async function TrishaPage() {
   if (user) {
     const isTrishaLoggedIn = user.email === 'moncadatrisha600@gmail.com';
     
-    if (accessUser === 'harron') {
-      if (isTrishaLoggedIn) {
-        // Trisha selecting "Harron" button -> Her own scrapbook (Name swap)
-        entriesQuery = entriesQuery.eq('user_id', user.id);
-      } else {
-        // Harron selecting "Harron" button -> His own scrapbook (Original behavior)
-        entriesQuery = entriesQuery.or(`user_id.eq.${user.id},user_id.is.null`);
-      }
+    if (isTrishaLoggedIn) {
+      // Trisha always sees only her own entries in the scrapbook
+      entriesQuery = entriesQuery.eq('user_id', user.id);
     } else {
-      // accessUser === 'trisha'
-      if (isTrishaLoggedIn) {
-        // Trisha seeing her own entries
-        entriesQuery = entriesQuery.eq('user_id', user.id);
-      } else {
-        // Harron seeing Trisha's scrapbook
-        entriesQuery = entriesQuery.neq('user_id', user.id).not('user_id', 'is', null);
-      }
+      // Harron always sees only his own entries (including original null user_id entries)
+      entriesQuery = entriesQuery.or(`user_id.eq.${user.id},user_id.is.null`);
     }
   }
 

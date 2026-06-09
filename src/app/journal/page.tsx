@@ -29,19 +29,12 @@ export default function JournalListPage() {
       if (user) {
         const isTrishaLoggedIn = user.email === 'moncadatrisha600@gmail.com';
         
-        if (accessUser === 'harron') {
-          if (isTrishaLoggedIn) {
-            query = query.or(`user_id.neq.${user.id},user_id.is.null`);
-          } else {
-            query = query.or(`user_id.eq.${user.id},user_id.is.null`);
-          }
+        if (isTrishaLoggedIn) {
+          // Trisha sees her own entries
+          query = query.eq('user_id', user.id);
         } else {
-          // accessUser === 'trisha'
-          if (isTrishaLoggedIn) {
-            query = query.eq('user_id', user.id);
-          } else {
-            query = query.neq('user_id', user.id).not('user_id', 'is', null);
-          }
+          // Harron sees his own entries (including original null ones)
+          query = query.or(`user_id.eq.${user.id},user_id.is.null`);
         }
       }
 
