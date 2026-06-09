@@ -12,6 +12,7 @@ export function AccessGate() {
   const [attempts, setAttempts] = useState(0);
   const [challengeError, setChallengeError] = useState('');
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [pendingUser, setPendingUser] = useState<string>('');
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
@@ -39,7 +40,10 @@ export function AccessGate() {
   }, [pathname, router, supabase.auth]);
 
   const handleSelect = (user: string) => {
-    if (user === 'trisha' && userEmail !== 'moncadatrisha600@gmail.com') {
+    const isTrishaLoggedIn = userEmail === 'moncadatrisha600@gmail.com';
+    
+    if ((user === 'trisha' && !isTrishaLoggedIn) || (user === 'harron' && isTrishaLoggedIn)) {
+      setPendingUser(user);
       setChallengeStep(1);
     } else {
       sessionStorage.setItem('access_user', user);
@@ -53,8 +57,8 @@ export function AccessGate() {
   const handleChallengeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (challengeAnswer.trim() === '10/22/25') {
-      sessionStorage.setItem('access_user', 'trisha');
-      document.cookie = `access_user=trisha; path=/;`;
+      sessionStorage.setItem('access_user', pendingUser);
+      document.cookie = `access_user=${pendingUser}; path=/;`;
       setShowModal(false);
       if (pathname.startsWith('/trisha')) {
         router.push('/');
@@ -160,7 +164,9 @@ export function AccessGate() {
           {challengeStep === 2 && (
             <div className={styles.failedChallenge}>
               <div style={{ fontSize: '5rem', marginBottom: '1rem', animation: 'shake 0.5s infinite' }}>😡</div>
-              <h2 className={styles.heading} style={{ color: '#ef4444' }}>You're not Trisha or Harron!!</h2>
+              <h2 className={styles.heading} style={{ color: '#ef4444' }}>
+                {userEmail === 'moncadatrisha600@gmail.com' ? "You're not Harron or Trisha!!" : "You're not Trisha or Harron!!"}
+              </h2>
               <p className={styles.subheading}>Logging you out...</p>
             </div>
           )}
