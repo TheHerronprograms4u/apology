@@ -30,6 +30,8 @@ export function AccessGate() {
         const accessUser = sessionStorage.getItem('access_user');
         if (!accessUser) {
           setShowModal(true);
+        } else if (email !== 'moncadatrisha600@gmail.com' && accessUser === 'trisha' && !pathname.startsWith('/trisha') && !pathname.startsWith('/login')) {
+          router.push('/trisha');
         } else if (email === 'moncadatrisha600@gmail.com' && accessUser === 'trisha' && pathname.startsWith('/trisha')) {
           router.push('/');
         }
@@ -60,9 +62,14 @@ export function AccessGate() {
       sessionStorage.setItem('access_user', pendingUser);
       document.cookie = `access_user=${pendingUser}; path=/;`;
       setShowModal(false);
-      if (pathname.startsWith('/trisha')) {
+      
+      const isTrishaLoggedIn = userEmail === 'moncadatrisha600@gmail.com';
+      if ((!isTrishaLoggedIn && pendingUser === 'trisha') || (isTrishaLoggedIn && pendingUser === 'harron')) {
+        router.push('/trisha');
+      } else if (pathname.startsWith('/trisha')) {
         router.push('/');
       }
+      
       router.refresh();
     } else {
       const nextAttempts = attempts + 1;

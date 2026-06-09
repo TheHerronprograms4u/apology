@@ -81,11 +81,11 @@ export default function NewJournalEntry() {
     setLoading(true);
     
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
       
       if (!user) {
-        alert('You must be logged in to save entries.');
-        router.push('/login?redirectTo=/journal/new');
+        alert('Your session might have expired. Please try logging in again if this persists.');
         return;
       }
 

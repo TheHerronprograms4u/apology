@@ -13,7 +13,13 @@ export default async function TrishaPage() {
     .order('journal_date', { ascending: true });
 
   if (user) {
-    entriesQuery = entriesQuery.neq('user_id', user.id);
+    // If Trisha is logged in, show Harron's entries (neq her ID or null)
+    // If Harron is logged in, show Trisha's entries (neq his ID)
+    if (user.email === 'moncadatrisha600@gmail.com') {
+      entriesQuery = entriesQuery.or(`user_id.neq.${user.id},user_id.is.null`);
+    } else {
+      entriesQuery = entriesQuery.neq('user_id', user.id);
+    }
   }
 
   // Fetch all journal entries, ordered chronologically
