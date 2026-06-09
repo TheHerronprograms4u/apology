@@ -4,12 +4,20 @@ import { TrishaClient } from './TrishaClient';
 export default async function TrishaPage() {
   const supabase = await createClient();
 
-  // Fetch all journal entries, ordered chronologically
-  const { data: entries } = await supabase
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let entriesQuery = supabase
     .from('entries')
     .select('id, title, content, journal_date, mood, is_draft')
     .eq('is_draft', false)
     .order('journal_date', { ascending: true });
+
+  if (user) {
+    entriesQuery = entriesQuery.neq('user_id', user.id);
+  }
+
+  // Fetch all journal entries, ordered chronologically
+  const { data: entries } = await entriesQuery;
 
   // Fetch all photos/attachments
   const { data: memories } = await supabase

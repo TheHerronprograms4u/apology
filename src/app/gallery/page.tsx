@@ -14,20 +14,33 @@ export default function GalleryPage() {
 
   useEffect(() => {
     const fetchMemories = async () => {
-      // Fetch attachments along with their parent entries
-      const { data, error } = await supabase
+      const { data: { user } } = await supabase.auth.getUser();
+      const accessUser = sessionStorage.getItem('access_user');
+
+      let query = supabase
         .from('attachments')
         .select(`
           id,
           url,
           file_name,
           entry_id,
-          entries (
+          entries!inner (
             title,
-            journal_date
+            journal_date,
+            user_id
           )
         `)
         .order('created_at', { ascending: false });
+
+      if (user && user.email === 'moncadatrisha600@gmail.com') {
+        if (accessUser === 'harron') {
+          query = query.neq('entries.user_id', user.id);
+        } else {
+          query = query.eq('entries.user_id', user.id);
+        }
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         console.error('Error fetching memories:', error);

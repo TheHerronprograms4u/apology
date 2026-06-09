@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { cookies } from 'next/headers';
 import { Calendar, Smile, ArrowRight } from 'lucide-react';
 import { FloatingStars } from '@/components/ui/FloatingStars';
 import { Polaroid } from '@/components/ui/Polaroid';
@@ -10,23 +11,39 @@ import styles from './Home.module.css';
 export default async function Home() {
   const supabase = await createClient();
 
-  // Fetch the 3 most recent published entries
-  const { data: recentEntries } = await supabase
+  const { data: { user } } = await supabase.auth.getUser();
+  const cookieStore = await cookies();
+  const accessUser = cookieStore.get('access_user')?.value;
+
+  let entriesQuery = supabase
     .from('entries')
     .select('id, title, journal_date, mood, is_draft')
     .eq('is_draft', false)
     .order('journal_date', { ascending: false })
     .limit(3);
 
-  // Fetch all entries from the past 7 days for mood tracking
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  const { data: weekEntries } = await supabase
+  
+  let weekQuery = supabase
     .from('entries')
     .select('mood, journal_date')
     .eq('is_draft', false)
     .gte('journal_date', sevenDaysAgo.toISOString().split('T')[0])
     .order('journal_date', { ascending: false });
+
+  if (user && user.email === 'moncadatrisha600@gmail.com') {
+    if (accessUser === 'harron') {
+      entriesQuery = entriesQuery.neq('user_id', user.id);
+      weekQuery = weekQuery.neq('user_id', user.id);
+    } else {
+      entriesQuery = entriesQuery.eq('user_id', user.id);
+      weekQuery = weekQuery.eq('user_id', user.id);
+    }
+  }
+
+  const { data: recentEntries } = await entriesQuery;
+  const { data: weekEntries } = await weekQuery;
 
   const entries = recentEntries || [];
   const moods = weekEntries || [];

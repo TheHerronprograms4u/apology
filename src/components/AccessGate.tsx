@@ -11,6 +11,7 @@ export function AccessGate() {
   const [challengeAnswer, setChallengeAnswer] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [challengeError, setChallengeError] = useState('');
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
@@ -23,11 +24,15 @@ export function AccessGate() {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session) {
+        const email = session.user.email;
+        setUserEmail(email || null);
         const accessUser = sessionStorage.getItem('access_user');
         if (!accessUser) {
           setShowModal(true);
-        } else if (accessUser === 'trisha' && !pathname.startsWith('/trisha') && !pathname.startsWith('/login')) {
+        } else if (email !== 'moncadatrisha600@gmail.com' && accessUser === 'trisha' && !pathname.startsWith('/trisha') && !pathname.startsWith('/login')) {
           router.push('/trisha');
+        } else if (email === 'moncadatrisha600@gmail.com' && accessUser === 'trisha' && pathname.startsWith('/trisha')) {
+          router.push('/');
         }
       }
     };
@@ -36,11 +41,14 @@ export function AccessGate() {
   }, [pathname, router, supabase.auth]);
 
   const handleSelect = (user: string) => {
-    if (user === 'trisha') {
+    if (user === 'trisha' && userEmail !== 'moncadatrisha600@gmail.com') {
       setChallengeStep(1);
     } else {
       sessionStorage.setItem('access_user', user);
+      document.cookie = `access_user=${user}; path=/;`;
       setShowModal(false);
+      // Force reload to apply cookie to server components if needed, or let router handle it
+      router.refresh();
     }
   };
 
@@ -48,8 +56,10 @@ export function AccessGate() {
     e.preventDefault();
     if (challengeAnswer.trim() === '10/22/25') {
       sessionStorage.setItem('access_user', 'trisha');
+      document.cookie = `access_user=trisha; path=/;`;
       setShowModal(false);
       router.push('/trisha');
+      router.refresh();
     } else {
       const nextAttempts = attempts + 1;
       setAttempts(nextAttempts);
@@ -85,19 +95,39 @@ export function AccessGate() {
               <p className={styles.subheading}>Who's accessing the Journal?</p>
               
               <div className={styles.buttonGroup}>
-                <button 
-                  className={`${styles.selectBtn} ${styles.harronBtn}`}
-                  onClick={() => handleSelect('harron')}
-                >
-                  <span className={styles.btnText}>Harron</span>
-                </button>
-                <button 
-                  className={`${styles.selectBtn} ${styles.trishaBtn}`}
-                  onClick={() => handleSelect('trisha')}
-                >
-                  <span className={styles.btnText}>Trisha</span>
-                  <span className={styles.sparkle}>✨</span>
-                </button>
+                {userEmail === 'moncadatrisha600@gmail.com' ? (
+                  <>
+                    <button 
+                      className={`${styles.selectBtn} ${styles.trishaBtn}`}
+                      onClick={() => handleSelect('trisha')}
+                    >
+                      <span className={styles.btnText}>Trisha</span>
+                      <span className={styles.sparkle}>✨</span>
+                    </button>
+                    <button 
+                      className={`${styles.selectBtn} ${styles.harronBtn}`}
+                      onClick={() => handleSelect('harron')}
+                    >
+                      <span className={styles.btnText}>Harron</span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button 
+                      className={`${styles.selectBtn} ${styles.harronBtn}`}
+                      onClick={() => handleSelect('harron')}
+                    >
+                      <span className={styles.btnText}>Harron</span>
+                    </button>
+                    <button 
+                      className={`${styles.selectBtn} ${styles.trishaBtn}`}
+                      onClick={() => handleSelect('trisha')}
+                    >
+                      <span className={styles.btnText}>Trisha</span>
+                      <span className={styles.sparkle}>✨</span>
+                    </button>
+                  </>
+                )}
               </div>
             </>
           )}

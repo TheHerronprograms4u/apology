@@ -17,10 +17,24 @@ export default function JournalListPage() {
   useEffect(() => {
     const fetchEntries = async () => {
       setLoading(true);
-      const { data, error } = await supabase
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      const accessUser = sessionStorage.getItem('access_user');
+      
+      let query = supabase
         .from('entries')
         .select('*')
         .order('journal_date', { ascending: false });
+
+      if (user && user.email === 'moncadatrisha600@gmail.com') {
+        if (accessUser === 'harron') {
+          query = query.neq('user_id', user.id);
+        } else {
+          query = query.eq('user_id', user.id);
+        }
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         console.error('Error fetching entries:', error);
