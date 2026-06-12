@@ -250,7 +250,7 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
           viewport={{ once: true }}
           transition={{ duration: 1.5 }}
         >
-          <h2 className={styles.chapterTitle} style={{ borderBottom: 'none' }}>Chapter 5: Reflection</h2>
+          <h2 className={styles.chapterTitle} style={{ borderBottom: 'none' }}>Reflection...</h2>
           <p className={styles.endingQuote}>
             "Every memory we create is a piece of art in the scrapbook of our lives. 
             Thank you for being the most beautiful chapter."
