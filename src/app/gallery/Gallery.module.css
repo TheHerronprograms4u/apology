@@ -14,17 +14,17 @@
 }
 
 .masonry {
-  columns: 3;
-  column-gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
   padding: 1rem;
+  align-items: start;
 }
 
 .galleryItemLink {
   text-decoration: none;
   color: inherit;
   display: block;
-  break-inside: avoid;
-  margin-bottom: 3rem;
 }
 
 .galleryItem {
@@ -61,12 +61,12 @@
 
 @media (max-width: 900px) {
   .masonry {
-    columns: 2;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 600px) {
   .masonry {
-    columns: 1;
+    grid-template-columns: 1fr;
   }
 }
