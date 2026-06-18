@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, ChevronDown, Music, X, MessageCircleHeart, Send } from 'lucide-react';
 import { ReadOnlyEditor } from '@/components/ReadOnlyEditor';
+import { createClient } from '@/lib/supabase-client';
 import styles from './Trisha.module.css';
 
 const PLAYLIST = [
@@ -11,7 +12,7 @@ const PLAYLIST = [
   { title: 'Mundo', url: '/Mundo.mp3' }
 ];
 
-export function TrishaClient({ entries, memories }: { entries: any[], memories: any[] }) {
+export function TrishaClient({ entries, memories, initialReplies }: { entries: any[], memories: any[], initialReplies?: Record<string, string[]> }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(0.5);
@@ -19,8 +20,9 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
   const [selectedEntry, setSelectedEntry] = useState<any>(null);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
-  const [replies, setReplies] = useState<Record<string, string[]>>({});
+  const [replies, setReplies] = useState<Record<string, string[]>>(initialReplies || {});
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const supabase = createClient();
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
 
@@ -84,16 +86,30 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
     }
   };
 
-  const handleReplySubmit = (entryId: string, e: React.FormEvent) => {
+  const handleReplySubmit = async (entryId: string, e: React.FormEvent) => {
     e.stopPropagation();
     e.preventDefault();
     if (!replyText.trim()) return;
+
+    const newReply = replyText.trim();
+    
+    // Optimistic UI update
     setReplies(prev => ({
       ...prev,
-      [entryId]: [...(prev[entryId] || []), replyText]
+      [entryId]: [...(prev[entryId] || []), newReply]
     }));
     setReplyText("");
     setReplyingTo(null);
+
+    // Save to Supabase
+    try {
+      await supabase.from('entry_replies').insert({
+        entry_id: entryId,
+        reply_text: newReply
+      });
+    } catch (err) {
+      console.error("Failed to save reply", err);
+    }
   };
 
   return (

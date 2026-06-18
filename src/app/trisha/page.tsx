@@ -64,9 +64,27 @@ export default async function TrishaPage() {
   const validEntryIds = new Set((entries || []).map(e => e.id));
   const filteredMemories = (attachments || []).filter((att: any) => validEntryIds.has(att.entry_id));
 
+  // Fetch replies
+  let initialRepliesMap: Record<string, string[]> = {};
+  try {
+    const { data: initialReplies, error } = await supabase
+      .from('entry_replies')
+      .select('entry_id, reply_text')
+      .order('created_at', { ascending: true });
+      
+    if (!error && initialReplies) {
+      for (const row of initialReplies) {
+        if (!initialRepliesMap[row.entry_id]) initialRepliesMap[row.entry_id] = [];
+        initialRepliesMap[row.entry_id].push(row.reply_text);
+      }
+    }
+  } catch (err) {
+    console.log("Could not fetch replies yet", err);
+  }
+
   return (
     <main style={{ minHeight: '100vh', background: 'var(--bg-color)' }}>
-      <TrishaClient entries={entries || []} memories={filteredMemories} />
+      <TrishaClient entries={entries || []} memories={filteredMemories} initialReplies={initialRepliesMap} />
     </main>
   );
 }
