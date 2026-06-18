@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX, ChevronDown, Music, X } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, ChevronDown, Music, X, MessageCircleHeart, Send } from 'lucide-react';
 import { ReadOnlyEditor } from '@/components/ReadOnlyEditor';
 import styles from './Trisha.module.css';
 
@@ -17,6 +17,9 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
   const [volume, setVolume] = useState(0.5);
   const [progress, setProgress] = useState(0);
   const [selectedEntry, setSelectedEntry] = useState<any>(null);
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [replies, setReplies] = useState<Record<string, string[]>>({});
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
@@ -79,6 +82,18 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
       audioRef.current.currentTime = (val / 100) * audioRef.current.duration;
       setProgress(val);
     }
+  };
+
+  const handleReplySubmit = (entryId: string, e: React.FormEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!replyText.trim()) return;
+    setReplies(prev => ({
+      ...prev,
+      [entryId]: [...(prev[entryId] || []), replyText]
+    }));
+    setReplyText("");
+    setReplyingTo(null);
   };
 
   return (
@@ -201,6 +216,57 @@ export function TrishaClient({ entries, memories }: { entries: any[], memories: 
                     <ReadOnlyEditor content={entry.content} />
                   </div>
                   <span className={styles.readMore}>Read memory &rarr;</span>
+
+                  {/* Reply Bubble */}
+                  <div 
+                    className={`${styles.replyBubble} ${isLeft ? styles.replyBubbleLeft : styles.replyBubbleRight}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setReplyingTo(replyingTo === entry.id ? null : entry.id);
+                      setReplyText("");
+                    }}
+                  >
+                    <MessageCircleHeart size={24} />
+                  </div>
+
+                  {/* Reply Input Area */}
+                  <AnimatePresence>
+                    {replyingTo === entry.id && (
+                      <motion.div 
+                        className={`${styles.replyInputArea} ${isLeft ? styles.replyInputAreaLeft : styles.replyInputAreaRight}`}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <form onSubmit={(e) => handleReplySubmit(entry.id, e)} className={styles.replyForm}>
+                          <input 
+                            type="text" 
+                            autoFocus
+                            placeholder="Type a sweet reply..." 
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            className={styles.replyInput}
+                          />
+                          <button type="submit" className={styles.replySubmitBtn}>
+                            <Send size={16} />
+                          </button>
+                        </form>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Display Replies */}
+                  {replies[entry.id] && replies[entry.id].length > 0 && (
+                    <div className={styles.repliesList}>
+                      {replies[entry.id].map((reply, i) => (
+                        <div key={i} className={styles.replyItem}>
+                          <span className={styles.replyAvatar}>💖</span>
+                          <span className={styles.replyTextContent}>{reply}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </div>
